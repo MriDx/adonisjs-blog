@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /*
 |--------------------------------------------------------------------------
@@ -14,23 +14,32 @@
 */
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
-const Route = use('Route')
+const Route = use("Route");
 
-Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
-})
+Route.get("/", () => {
+  return { greeting: "Hello world in JSON" };
+});
 
+Route.post("register", "AuthController.register").prefix("/api/v1");
+Route.post("login", "AuthController.login").prefix("/api/v1");
+Route.get("me", "AuthController.me")
+  .prefix("/api/v1")
+  .middleware("auth");
 
-Route.post('register', 'AuthController.register').prefix('/api/v1')
-Route.post('login', 'AuthController.login').prefix('/api/v1')
-Route.get('me', 'AuthController.me').prefix('/api/v1').middleware('auth')
+Route.get("categories", "CategoryController.index").prefix("/api/v1");
+Route.post("categories", "CategoryController.store")
+  .prefix("/api/v1")
+  .middleware("auth");
+Route.put("categories/edit/:id", "CategoryController.update")
+  .prefix("/api/v1")
+  .middleware("auth");
 
-Route.get('categories', 'CategoryController.index').prefix('/api/v1')
-Route.post('categories', 'CategoryController.store').prefix('/api/v1').middleware('auth')
-Route.put('categories/edit/:id', 'CategoryController.update').prefix('/api/v1').middleware('auth')
-
-Route.get('posts', 'PostController.index').prefix('/api/v1')
-Route.get('posts/:id', 'PostController.show').prefix('/api/v1')
-Route.get('posts/category/:id', 'PostController.byCategory').prefix('/api/v1')
-Route.post('posts', 'PostController.store').prefix('/api/v1').middleware('auth')
-Route.put('posts/:id', 'PostController.update').prefix('/api/v1').middleware('auth')
+Route.get("posts", "PostController.index").prefix("/api/v1");
+Route.get("posts/:id", "PostController.show").prefix("/api/v1");
+Route.get("posts/category/:id", "PostController.byCategory").prefix("/api/v1");
+Route.post("posts", "PostController.store")
+  .prefix("/api/v1")
+  .middleware("auth");
+Route.put("posts/:id", "PostController.update")
+  .prefix("/api/v1")
+  .middleware("auth");
