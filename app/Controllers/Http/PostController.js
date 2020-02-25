@@ -1,10 +1,10 @@
-'use strict'
+"use strict";
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-const Post = use('App/Models/Post')
+const Post = use("App/Models/Post");
 
 /**
  * Resourceful controller for interacting with posts
@@ -19,26 +19,41 @@ class PostController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ request, response, view }) {
+  async index({ request, params: { page_id }, response, view }) {
     try {
       const posts = await Post.query()
-        .with('author', function (builder) {
-          builder.select('users.id', 'users.full_name', 'users.email')
+        .with("author", function(builder) {
+          builder.select("users.id", "users.full_name", "users.email");
         })
-        .with('category', function (builder) {
-          builder.select('categories.id', 'categories.cat_name')
+        .with("category", function(builder) {
+          builder.select("categories.id", "categories.cat_name");
         })
-        .fetch()
+        .withCount("comments as total_comments")
+        .with("comments", function(builder) {
+          builder
+            .select(
+              "Comments.id",
+              "Comments.post_id",
+              "Comments.user_id",
+              "Comments.content"
+            )
+            .limit(5)
+            .with("user", function(builder) {
+              builder.select("Users.id", "Users.name", "Users.created_at");
+            });
+        })
+        .orderBy("posts.created_at", "desc")
+        .fetch();
       return response.json({
-        status: 'success',
+        status: "success",
         posts: posts
-      })
+      });
     } catch (error) {
       return response.json({
-        status: 'error'
-      })
+        status: "error",
+        error
+      });
     }
-
   }
 
   /**
@@ -50,8 +65,7 @@ class PostController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create({ request, response, view }) {
-  }
+  async create({ request, response, view }) {}
 
   /**
    * Create/save a new post.
@@ -63,16 +77,16 @@ class PostController {
    */
   async store({ request, auth, response }) {
     try {
-      const user = await auth.getUser()
-      const post = await user.posts().create(request.all())
+      const user = await auth.getUser();
+      const post = await user.posts().create(request.all());
       return response.json({
-        status: 'success',
-        message: 'post created'
-      })
+        status: "success",
+        message: "post created"
+      });
     } catch (error) {
       return response.json({
-        status: 'error'
-      })
+        status: "error"
+      });
     }
   }
 
@@ -88,22 +102,31 @@ class PostController {
   async show({ params: { id }, request, response, view }) {
     try {
       const post = await Post.query()
-        .where('id', id)
-        .with('author', function (builder) {
-          builder.select('users.id', 'users.full_name', 'users.email')
+        .where("id", id)
+        .with("author", function(builder) {
+          builder.select("users.id", "users.full_name", "users.email");
         })
-        .with('category', function (builder) {
-          builder.select('categories.id', 'categories.cat_name')
+        .with("category", function(builder) {
+          builder.select("categories.id", "categories.cat_name");
         })
-        .first()
+        .withCount("comments as total_comments")
+        .with("comments", function(builder) {
+          builder
+            .select("Comments.id", "Comments.post_id", "Comments.content")
+            .with("replies", function(builder) {
+              builder.limit(5);
+            });
+          //.limit(5);
+        })
+        .first();
       return response.json({
-        status: 'success',
+        status: "success",
         post: post
-      })
+      });
     } catch (error) {
       return response.json({
-        status: 'error'
-      })
+        status: "error"
+      });
     }
   }
 
@@ -116,8 +139,7 @@ class PostController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {
-  }
+  async edit({ params, request, response, view }) {}
 
   /**
    * Update post details.
@@ -128,24 +150,23 @@ class PostController {
    * @param {Response} ctx.response
    */
   async update({ params: { id }, auth, request, response }) {
-
     try {
-      const user = await auth.getUser()
-      const { content, category_id } = request.all()
-      const post = await Post.findBy('id', id)
-      post.content = content
-      post.category_id = category_id || post.category_id
-      await post.save()
+      const user = await auth.getUser();
+      const { content, category_id } = request.all();
+      const post = await Post.findBy("id", id);
+      post.content = content;
+      post.category_id = category_id || post.category_id;
+      await post.save();
       return response.json({
-        status: 'success',
-        message: 'post updated',
+        status: "success",
+        message: "post updated",
         post: post
-      })
+      });
     } catch (error) {
       return response.json({
-        status: 'error',
-        message: 'failed to update post'
-      })
+        status: "error",
+        message: "failed to update post"
+      });
     }
   }
 
@@ -157,27 +178,62 @@ class PostController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {
-  }
-
+  async destroy({ params, request, response }) {}
 
   // post by category id
   async byCategory({ params: { id }, response }) {
     const posts = await Post.query()
-      .where('category_id', id)
-      .with('author', function (builder) {
-        builder.select('users.id', 'users.full_name', 'users.email')
+      .where("category_id", id)
+      .with("author", function(builder) {
+        builder.select("users.id", "users.full_name", "users.email");
       })
-      .with('category', function (builder) {
-        builder.select('categories.id', 'categories.cat_name')
+      .with("category", function(builder) {
+        builder.select("categories.id", "categories.cat_name");
       })
-      .fetch()
+      .withCount("comments as total_comments")
+      .fetch();
     return response.json({
-      status: 'success',
+      status: "success",
       posts: posts
-    })
+    });
   }
 
+  async posts_paginate({ params: { page_id }, response }) {
+    try {
+      const posts = await Post.query()
+        .with("author", function(builder) {
+          builder.select("Users.id", "Users.name", "Users.email");
+        })
+        .with("category", function(builder) {
+          builder.select("Categories.id", "Categories.name");
+        })
+        .withCount("comments as total_comments")
+        .with("comments", function(builder) {
+          builder
+            .select(
+              "Comments.id",
+              "Comments.post_id",
+              "Comments.user_id",
+              "Comments.content"
+            )
+            .limit(5)
+            .with("user", function(builder) {
+              builder.select("Users.id", "Users.name", "Users.created_at");
+            });
+        })
+        .forPage(page_id || 1, 2)
+        .fetch();
+      return response.json({
+        status: "success",
+        posts: posts
+      });
+    } catch (error) {
+      return response.json({
+        status: "error",
+        error
+      });
+    }
+  }
 }
 
-module.exports = PostController
+module.exports = PostController;

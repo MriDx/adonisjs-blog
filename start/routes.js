@@ -35,7 +35,12 @@ Route.put("categories/edit/:id", "CategoryController.update")
   .middleware("auth");
 
 Route.get("posts", "PostController.index").prefix("/api/v1");
+<<<<<<< HEAD
 Route.get("posts/:id", "PostController.show").prefix("/api/v1");
+=======
+Route.get("posts/:page_id", "PostController.posts_paginate").prefix("/api/v1");
+Route.get("post/:id", "PostController.show").prefix("/api/v1");
+>>>>>>> f51a16d26766ea4103bfb4400e7a418341594785
 Route.get("posts/category/:id", "PostController.byCategory").prefix("/api/v1");
 Route.post("posts", "PostController.store")
   .prefix("/api/v1")
@@ -43,3 +48,14 @@ Route.post("posts", "PostController.store")
 Route.put("posts/:id", "PostController.update")
   .prefix("/api/v1")
   .middleware("auth");
+<<<<<<< HEAD
+=======
+Route.get("posts/comment", "CommentController.index");
+
+Route.post("posts/comment", "CommentController.store")
+  .prefix("/api/v1")
+  .middleware("auth");
+Route.post("comment/reply/:comment_id", "ReplyController.store")
+  .prefix("/api/v1")
+  .middleware("auth");
+>>>>>>> f51a16d26766ea4103bfb4400e7a418341594785
