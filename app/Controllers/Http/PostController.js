@@ -42,6 +42,7 @@ class PostController {
               builder.select("Users.id", "Users.name", "Users.created_at");
             });
         })
+        .orderBy("posts.created_at", "desc")
         .fetch();
       return response.json({
         status: "success",
@@ -189,6 +190,7 @@ class PostController {
       .with("category", function(builder) {
         builder.select("Categories.id", "Categories.name");
       })
+      .withCount("comments as total_comments")
       .fetch();
     return response.json({
       status: "success",
