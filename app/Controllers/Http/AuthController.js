@@ -43,7 +43,7 @@ class AuthController {
 				status: 'success',
 				user: {
 					id: user.id,
-					name: user.name,
+					name: user.full_name,
 					email: user.email
 				}
 			})
