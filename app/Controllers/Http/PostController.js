@@ -39,7 +39,7 @@ class PostController {
             )
             .limit(5)
             .with("user", function(builder) {
-              builder.select("Users.id", "Users.name", "Users.created_at");
+              builder.select("users.id", "users.full_name", "users.created_at");
             });
         })
         .orderBy("posts.created_at", "desc")
@@ -202,10 +202,10 @@ class PostController {
     try {
       const posts = await Post.query()
         .with("author", function(builder) {
-          builder.select("Users.id", "Users.name", "Users.email");
+          builder.select("users.id", "users.name", "users.email");
         })
         .with("category", function(builder) {
-          builder.select("Categories.id", "Categories.name");
+          builder.select("categories.id", "categories.name");
         })
         .withCount("comments as total_comments")
         .with("comments", function(builder) {
@@ -218,7 +218,7 @@ class PostController {
             )
             .limit(5)
             .with("user", function(builder) {
-              builder.select("Users.id", "Users.name", "Users.created_at");
+              builder.select("users.id", "users.name", "users.created_at");
             });
         })
         .forPage(page_id || 1, 2)
