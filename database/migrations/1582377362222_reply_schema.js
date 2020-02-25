@@ -9,9 +9,9 @@ class ReplySchema extends Schema {
       table.increments();
       table.string("content").notNullable();
       table.integer("comment_id").unsigned();
-      table.foreign("comment_id").references("Comments.id");
+      table.foreign("comment_id").references("comments.id");
       table.integer("user_id").unsigned();
-      table.foreign("user_id").references("Users.id");
+      table.foreign("user_id").references("users.id");
       table.timestamps();
     });
   }

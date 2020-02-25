@@ -10,9 +10,9 @@ class CommentSchema extends Schema {
       table.string("content").notNullable();
       table.timestamps();
       table.integer("user_id").unsigned();
-      table.foreign("user_id").references("Users.id");
+      table.foreign("user_id").references("users.id");
       table.integer("post_id").unsigned();
-      table.foreign("post_id").references("Posts.id");
+      table.foreign("post_id").references("posts.id");
     });
   }
 
