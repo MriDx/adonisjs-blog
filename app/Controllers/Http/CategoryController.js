@@ -99,10 +99,10 @@ class CategoryController {
   async update({ params: { id }, auth, request, response }) {
     try {
       await auth.getUser()
-      const { name, description } = request.all()
+      const { cat_name, description } = request.all()
       const category = await Category.findBy('id', id)
-      if (name != category.name || description != category.description) {
-        category.name = name || category.name
+      if (cat_name != category.cat_name || description != category.description) {
+        category.cat_name = cat_name || category.cat_name
         category.description = description
         const saved = await category.save()
         return response.json({
