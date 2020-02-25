@@ -23,10 +23,10 @@ class PostController {
     try {
       const posts = await Post.query()
         .with('author', function (builder) {
-          builder.select('Users.id', 'Users.name', 'Users.email')
+          builder.select('users.id', 'users.full_name', 'users.email')
         })
         .with('category', function (builder) {
-          builder.select('Categories.id', 'Categories.name')
+          builder.select('categories.id', 'categories.cat_name')
         })
         .fetch()
       return response.json({
@@ -90,10 +90,10 @@ class PostController {
       const post = await Post.query()
         .where('id', id)
         .with('author', function (builder) {
-          builder.select('Users.id', 'Users.name', 'Users.email')
+          builder.select('users.id', 'users.full_name', 'users.email')
         })
         .with('category', function (builder) {
-          builder.select('Categories.id', 'Categories.name')
+          builder.select('categories.id', 'categories.cat_name')
         })
         .first()
       return response.json({
@@ -166,10 +166,10 @@ class PostController {
     const posts = await Post.query()
       .where('category_id', id)
       .with('author', function (builder) {
-        builder.select('Users.id', 'Users.name', 'Users.email')
+        builder.select('users.id', 'users.full_name', 'users.email')
       })
       .with('category', function (builder) {
-        builder.select('Categories.id', 'Categories.name')
+        builder.select('categories.id', 'categories.cat_name')
       })
       .fetch()
     return response.json({
