@@ -10,9 +10,9 @@ class PostSchema extends Schema {
       table.string('title').notNullable()
       table.string('content').notNullable()
       table.integer('user_id').unsigned()
-      table.foreign('user_id').references('Users.id')
+      table.foreign('user_id').references('users.id')
       table.integer('category_id').unsigned()
-      table.foreign('category_id').references('Categories.id')
+      table.foreign('category_id').references('categories.id')
       table.timestamps()
     })
   }
