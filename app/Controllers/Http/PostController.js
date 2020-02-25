@@ -32,10 +32,10 @@ class PostController {
         .with("comments", function(builder) {
           builder
             .select(
-              "Comments.id",
-              "Comments.post_id",
-              "Comments.user_id",
-              "Comments.content"
+              "comments.id",
+              "comments.post_id",
+              "comments.user_id",
+              "comments.content"
             )
             .limit(5)
             .with("user", function(builder) {
@@ -112,7 +112,7 @@ class PostController {
         .withCount("comments as total_comments")
         .with("comments", function(builder) {
           builder
-            .select("Comments.id", "Comments.post_id", "Comments.content")
+            .select("comments.id", "comments.post_id", "comments.content")
             .with("replies", function(builder) {
               builder.limit(5);
             });
@@ -211,10 +211,10 @@ class PostController {
         .with("comments", function(builder) {
           builder
             .select(
-              "Comments.id",
-              "Comments.post_id",
-              "Comments.user_id",
-              "Comments.content"
+              "comments.id",
+              "comments.post_id",
+              "comments.user_id",
+              "comments.content"
             )
             .limit(5)
             .with("user", function(builder) {
