@@ -103,15 +103,15 @@ class PostController {
       const post = await Post.query()
         .where("id", id)
         .with("author", function (builder) {
-          builder.select("Users.id", "Users.name", "Users.email");
+          builder.select("users.id", "users.name", "users.email");
         })
         .with("category", function (builder) {
-          builder.select("Categories.id", "Categories.name");
+          builder.select("categories.id", "categories.name");
         })
         .withCount("comments as total_comments")
         .with("comments", function (builder) {
           builder
-            .select("Comments.id", "Comments.post_id", "Comments.content")
+            .select("comments.id", "comments.post_id", "comments.content")
             .with("replies", function (builder) {
               builder.limit(5);
             });
@@ -184,10 +184,10 @@ class PostController {
     const posts = await Post.query()
       .where("category_id", id)
       .with("author", function (builder) {
-        builder.select("Users.id", "Users.name", "Users.email");
+        builder.select("users.id", "users.name", "users.email");
       })
       .with("category", function (builder) {
-        builder.select("Categories.id", "Categories.name");
+        builder.select("categories.id", "categories.name");
       })
       .fetch();
     return response.json({
@@ -200,23 +200,23 @@ class PostController {
     try {
       const posts = await Post.query()
         .with("author", function (builder) {
-          builder.select("Users.id", "Users.name", "Users.email");
+          builder.select("users.id", "users.name", "users.email");
         })
         .with("category", function (builder) {
-          builder.select("Categories.id", "Categories.name");
+          builder.select("categories.id", "categories.name");
         })
         .withCount("comments as total_comments")
         .with("comments", function (builder) {
           builder
             .select(
-              "Comments.id",
-              "Comments.post_id",
-              "Comments.user_id",
-              "Comments.content"
+              "comments.id",
+              "comments.post_id",
+              "comments.user_id",
+              "comments.content"
             )
             .limit(5)
             .with("user", function (builder) {
-              builder.select("Users.id", "Users.name", "Users.created_at");
+              builder.select("users.id", "users.name", "users.created_at");
             });
         })
         .forPage(page_id || 1, 2)
