@@ -22,24 +22,24 @@ class PostController {
   async index({ request, params: { page_id }, response, view }) {
     try {
       const posts = await Post.query()
-        .with("author", function(builder) {
-          builder.select("Users.id", "Users.name", "Users.email");
+        .with("author", function (builder) {
+          builder.select("users.id", "users.name", "users.email");
         })
-        .with("category", function(builder) {
-          builder.select("Categories.id", "Categories.name");
+        .with("category", function (builder) {
+          builder.select("categories.id", "categories.name");
         })
         .withCount("comments as total_comments")
-        .with("comments", function(builder) {
+        .with("comments", function (builder) {
           builder
             .select(
-              "Comments.id",
-              "Comments.post_id",
-              "Comments.user_id",
-              "Comments.content"
+              "comments.id",
+              "comments.post_id",
+              "comments.user_id",
+              "comments.content"
             )
             .limit(5)
-            .with("user", function(builder) {
-              builder.select("Users.id", "Users.name", "Users.created_at");
+            .with("user", function (builder) {
+              builder.select("users.id", "users.name", "users.created_at");
             });
         })
         .fetch();
@@ -64,7 +64,7 @@ class PostController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create({ request, response, view }) {}
+  async create({ request, response, view }) { }
 
   /**
    * Create/save a new post.
@@ -102,17 +102,17 @@ class PostController {
     try {
       const post = await Post.query()
         .where("id", id)
-        .with("author", function(builder) {
+        .with("author", function (builder) {
           builder.select("Users.id", "Users.name", "Users.email");
         })
-        .with("category", function(builder) {
+        .with("category", function (builder) {
           builder.select("Categories.id", "Categories.name");
         })
         .withCount("comments as total_comments")
-        .with("comments", function(builder) {
+        .with("comments", function (builder) {
           builder
             .select("Comments.id", "Comments.post_id", "Comments.content")
-            .with("replies", function(builder) {
+            .with("replies", function (builder) {
               builder.limit(5);
             });
           //.limit(5);
@@ -138,7 +138,7 @@ class PostController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {}
+  async edit({ params, request, response, view }) { }
 
   /**
    * Update post details.
@@ -177,16 +177,16 @@ class PostController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {}
+  async destroy({ params, request, response }) { }
 
   // post by category id
   async byCategory({ params: { id }, response }) {
     const posts = await Post.query()
       .where("category_id", id)
-      .with("author", function(builder) {
+      .with("author", function (builder) {
         builder.select("Users.id", "Users.name", "Users.email");
       })
-      .with("category", function(builder) {
+      .with("category", function (builder) {
         builder.select("Categories.id", "Categories.name");
       })
       .fetch();
@@ -199,14 +199,14 @@ class PostController {
   async posts_paginate({ params: { page_id }, response }) {
     try {
       const posts = await Post.query()
-        .with("author", function(builder) {
+        .with("author", function (builder) {
           builder.select("Users.id", "Users.name", "Users.email");
         })
-        .with("category", function(builder) {
+        .with("category", function (builder) {
           builder.select("Categories.id", "Categories.name");
         })
         .withCount("comments as total_comments")
-        .with("comments", function(builder) {
+        .with("comments", function (builder) {
           builder
             .select(
               "Comments.id",
@@ -215,7 +215,7 @@ class PostController {
               "Comments.content"
             )
             .limit(5)
-            .with("user", function(builder) {
+            .with("user", function (builder) {
               builder.select("Users.id", "Users.name", "Users.created_at");
             });
         })
