@@ -190,6 +190,16 @@ class PostController {
       .with("category", function (builder) {
         builder.select("categories.id", "categories.name");
       })
+      .withCount("comments as total_comments")
+      .with("comments", function (builder) {
+        builder
+          .select("comments.id", "comments.post_id", "comments.content")
+          .withCount("replies as total_replies")
+          .with("replies", function (builder) {
+            builder.limit(5);
+          });
+        //.limit(5);
+      })
       .fetch();
     return response.json({
       status: "success",
