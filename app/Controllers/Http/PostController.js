@@ -112,6 +112,7 @@ class PostController {
         .with("comments", function (builder) {
           builder
             .select("comments.id", "comments.post_id", "comments.content")
+            .withCount("replies as total_replies")
             .with("replies", function (builder) {
               builder.limit(5);
             });
