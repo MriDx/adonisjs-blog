@@ -60,10 +60,9 @@ class AuthController {
 
   async logout({ request, auth, response }) {
     try {
-      const logout = await auth.logout();
+      await auth.logout();
       return response.json({
-        status: "success",
-        logout
+        status: "success"
       })
     } catch (error) {
       return response.json({
