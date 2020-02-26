@@ -25,6 +25,7 @@ Route.post("login", "AuthController.login").prefix("/api/v1");
 Route.get("me", "AuthController.me")
   .prefix("/api/v1")
   .middleware("auth");
+Route.post("logout", "AuthController.logout").prefix("/api/v1").middleware("auth");
 
 Route.get("categories", "CategoryController.index").prefix("/api/v1");
 Route.post("categories", "CategoryController.store")
@@ -33,6 +34,7 @@ Route.post("categories", "CategoryController.store")
 Route.put("categories/edit/:id", "CategoryController.update")
   .prefix("/api/v1")
   .middleware("auth");
+
 
 Route.get("posts", "PostController.index").prefix("/api/v1");
 Route.get("posts/:page_id", "PostController.posts_paginate").prefix("/api/v1");

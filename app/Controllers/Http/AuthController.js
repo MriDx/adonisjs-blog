@@ -57,6 +57,21 @@ class AuthController {
       });
     }
   }
+
+  async logout({ request, auth, response }) {
+    try {
+      const logout = await auth.logout();
+      return response.json({
+        status: "success",
+        logout
+      })
+    } catch (error) {
+      return response.json({
+        status: "error",
+        error
+      })
+    }
+  }
 }
 
 module.exports = AuthController;
