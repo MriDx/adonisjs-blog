@@ -6,9 +6,12 @@ class AuthController {
   async register({ request, response }) {
     try {
       await User.create(request.all());
+      let token = await auth.generate(user);
+      Object.assign(user, token);
       return response.json({
         status: "success",
-        message: "user registered"
+        message: "user registered",
+        user: user
       });
     } catch (error) {
       return response.json({
@@ -63,12 +66,12 @@ class AuthController {
       await auth.logout();
       return response.json({
         status: "success"
-      })
+      });
     } catch (error) {
       return response.json({
         status: "error",
         error
-      })
+      });
     }
   }
 }
