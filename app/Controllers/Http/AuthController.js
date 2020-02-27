@@ -3,7 +3,7 @@
 const User = use("App/Models/User");
 
 class AuthController {
-  async register({ request, response }) {
+  async register({ request, auth, response }) {
     try {
       const user = await User.create(request.all());
       let token = await auth.generate(user);
