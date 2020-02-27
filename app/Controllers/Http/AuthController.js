@@ -5,7 +5,7 @@ const User = use("App/Models/User");
 class AuthController {
   async register({ request, response }) {
     try {
-      await User.create(request.all());
+      const user = await User.create(request.all());
       let token = await auth.generate(user);
       Object.assign(user, token);
       return response.json({
@@ -16,7 +16,7 @@ class AuthController {
     } catch (error) {
       return response.json({
         status: "error",
-        error
+        message: "failed to create account"
       });
     }
   }
